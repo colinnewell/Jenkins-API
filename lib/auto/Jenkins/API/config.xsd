@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="project">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="actions"/>
+        <xs:element ref="description"/>
+        <xs:element ref="keepDependencies"/>
+        <xs:element ref="properties"/>
+        <xs:element ref="scm"/>
+        <xs:element ref="canRoam"/>
+        <xs:element ref="disabled"/>
+        <xs:element ref="blockBuildWhenDownstreamBuilding"/>
+        <xs:element ref="blockBuildWhenUpstreamBuilding"/>
+        <xs:element ref="triggers"/>
+        <xs:element ref="concurrentBuild"/>
+        <xs:element ref="builders"/>
+        <xs:element ref="publishers"/>
+        <xs:element ref="buildWrappers"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="actions">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="keepDependencies" type="xs:boolean"/>
+  <xs:element name="properties">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="scm">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="configVersion"/>
+        <xs:element ref="userRemoteConfigs"/>
+        <xs:element ref="branches"/>
+        <xs:element ref="disableSubmodules"/>
+        <xs:element ref="recursiveSubmodules"/>
+        <xs:element ref="doGenerateSubmoduleConfigurations"/>
+        <xs:element ref="authorOrCommitter"/>
+        <xs:element ref="clean"/>
+        <xs:element ref="wipeOutWorkspace"/>
+        <xs:element ref="pruneBranches"/>
+        <xs:element ref="remotePoll"/>
+        <xs:element ref="buildChooser"/>
+        <xs:element ref="gitTool"/>
+        <xs:element ref="submoduleCfg"/>
+        <xs:element ref="relativeTargetDir"/>
+        <xs:element ref="reference"/>
+        <xs:element ref="excludedRegions"/>
+        <xs:element ref="excludedUsers"/>
+        <xs:element ref="gitConfigName"/>
+        <xs:element ref="gitConfigEmail"/>
+        <xs:element ref="skipTag"/>
+        <xs:element ref="scmName"/>
+      </xs:sequence>
+      <xs:attribute name="class" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="configVersion" type="xs:integer"/>
+  <xs:element name="userRemoteConfigs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="hudson.plugins.git.UserRemoteConfig"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hudson.plugins.git.UserRemoteConfig">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="name">
+          <xs:sequence>
+            <xs:element ref="refspec"/>
+            <xs:element ref="url"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="refspec">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="url" type="xs:string"/>
+  <xs:element name="branches">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="hudson.plugins.git.BranchSpec"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hudson.plugins.git.BranchSpec" type="name"/>
+  <xs:element name="disableSubmodules" type="xs:boolean"/>
+  <xs:element name="recursiveSubmodules" type="xs:boolean"/>
+  <xs:element name="doGenerateSubmoduleConfigurations" type="xs:boolean"/>
+  <xs:element name="authorOrCommitter" type="xs:boolean"/>
+  <xs:element name="clean" type="xs:boolean"/>
+  <xs:element name="wipeOutWorkspace" type="xs:boolean"/>
+  <xs:element name="pruneBranches" type="xs:boolean"/>
+  <xs:element name="remotePoll" type="xs:boolean"/>
+  <xs:element name="buildChooser">
+    <xs:complexType>
+      <xs:attribute name="class" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="gitTool" type="xs:NCName"/>
+  <xs:element name="submoduleCfg">
+    <xs:complexType>
+      <xs:attribute name="class" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="relativeTargetDir">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="reference">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="excludedRegions">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="excludedUsers">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="gitConfigName">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="gitConfigEmail">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="skipTag" type="xs:boolean"/>
+  <xs:element name="scmName">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="canRoam" type="xs:boolean"/>
+  <xs:element name="disabled" type="xs:boolean"/>
+  <xs:element name="blockBuildWhenDownstreamBuilding" type="xs:boolean"/>
+  <xs:element name="blockBuildWhenUpstreamBuilding" type="xs:boolean"/>
+  <xs:element name="triggers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="hudson.triggers.SCMTrigger"/>
+      </xs:sequence>
+      <xs:attribute name="class" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hudson.triggers.SCMTrigger">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="spec"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="spec" type="xs:string"/>
+  <xs:element name="concurrentBuild" type="xs:boolean"/>
+  <xs:element name="builders">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="hudson.tasks.Shell"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hudson.tasks.Shell">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="command"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="command" type="xs:string"/>
+  <xs:element name="publishers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="hudson.tasks.junit.JUnitResultArchiver"/>
+        <xs:element ref="hudson.tasks.Mailer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hudson.tasks.junit.JUnitResultArchiver">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="testResults"/>
+        <xs:element ref="keepLongStdio"/>
+        <xs:element ref="testDataPublishers"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="testResults" type="xs:string"/>
+  <xs:element name="keepLongStdio" type="xs:boolean"/>
+  <xs:element name="testDataPublishers">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="hudson.tasks.Mailer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="recipients"/>
+        <xs:element ref="dontNotifyEveryUnstableBuild"/>
+        <xs:element ref="sendToIndividuals"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="recipients" type="xs:NCName"/>
+  <xs:element name="dontNotifyEveryUnstableBuild" type="xs:boolean"/>
+  <xs:element name="sendToIndividuals" type="xs:boolean"/>
+  <xs:element name="buildWrappers">
+    <xs:complexType/>
+  </xs:element>
+  <xs:complexType name="name">
+    <xs:sequence>
+      <xs:element ref="name"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="name" type="xs:string"/>
+</xs:schema>

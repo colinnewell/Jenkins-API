@@ -6,6 +6,7 @@ author   q{Colin Newell <colin.newell@gmail.com>};
 license  'perl';
 
 requires 'REST::Client';
+requires 'XML::Compile';
 
 build_requires 'Test::More';
 
