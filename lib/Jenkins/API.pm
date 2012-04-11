@@ -24,6 +24,12 @@ has base_url => (is => 'ro', isa => 'Str', default => 'http://moe:8080');
 
 =head1 SYNOPSIS
 
+This is a wrapper around the Jenkins API.
+
+    use Jenkins::API;
+
+    my $jenkins = Jenkins::API->new({ base_url => 'http://jenkins:8080' });
+    my $success = $jenkins->create_job($config_xml);
     ...
 
 =head2 create_job
