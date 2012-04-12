@@ -1,0 +1,17 @@
+These are notes on things done to build this module.
+
+They probably aren't relevant to most people, I just didn't want
+to lose the information on how I figured out the initial parts
+of the system.
+
+XSD created with trang (available as a package on Ubuntu)
+
+XML::Compile hash structure generated using XML::Compile itself 
+with a dinky little program like this,
+
+#!/usr/bin/env perl
+
+use strict;
+use XML::Compile::Schema;
+my $schema = XML::Compile::Schema->new('config.xsd');
+print $schema->template('PERL' => 'project');
