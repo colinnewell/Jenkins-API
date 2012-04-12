@@ -1,10 +1,11 @@
 package Jenkins::API;
 
 use Moose;
+use Jenkins::API::ConfigBuilder;
 
 =head1 NAME
 
-Jenkins::API - The great new Jenkins::API!
+Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
@@ -20,7 +21,7 @@ has '_client' => (is => 'ro', default => sub {
     require REST::Client;
     REST::Client->new();
 });
-has base_url => (is => 'ro', isa => 'Str', default => 'http://moe:8080');
+has base_url => (is => 'ro', isa => 'Str', required => 1);
 
 =head1 SYNOPSIS
 
@@ -57,7 +58,9 @@ sub create_job_simple
 {
     my ($self, $args) = @_;
 
-    $self->create_job();
+    my $cb = Jenkins::API::ConfigBuilder->new();
+    my $xml = $cb->to_xml($args);
+    return $self->create_job($xml);
 }
 
 =head1 AUTHOR
