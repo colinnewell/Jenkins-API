@@ -9,6 +9,13 @@ Jenkins::API::ConfigBuilder
 This is a module for creating the XML for the config files for a 
 project in Jenkins.
 
+I<This modules interface is very likely to change. I've currently
+implemented the bare minimum to get the API working but I'm
+of the opinion it currently sucks.  How to fix that I'm not sure
+yet.  The first order of business is to tidy up the XSD and get
+the XML generation solid.  Once that's done I'll understand what
+I can build and hopefully build a decent API for the Builder.>
+
 =head1 METHODS
 
 =head2 to_xml

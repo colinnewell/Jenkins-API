@@ -26,7 +26,8 @@ has base_url => (is => 'ro', isa => 'Str', required => 1);
 
 =head1 SYNOPSIS
 
-This is a wrapper around the Jenkins API.
+This is a wrapper around the Jenkins API.  Well the create job function
+right now...
 
     use Jenkins::API;
 
@@ -59,7 +60,7 @@ sub create_job
 Creates a job using a hash of information.  This builds the XML
 to pass to Jenkins for you by using the L<Jenkins::API::ConfigBuilder>.
 See that for details of the hash.  Currently this module is very new
-and the exact details of the hash is very likely to change.
+and the exact details of the hash are very likely to change.
 
     $self->create_job_simple($project_name, $config_hash);
 
