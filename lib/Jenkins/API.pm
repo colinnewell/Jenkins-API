@@ -81,11 +81,10 @@ Colin Newell, C<< <colin.newell at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-jenkins-api at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Jenkins-API>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
+Please report any bugs or feature requests to through the web interface 
+at L<https://github.com/colinnewell/Jenkins-API/issues/new>.  I will 
+be notified, and then you'll automatically be notified of progress 
+on your bug as I make changes.
 
 
 =head1 SUPPORT
@@ -99,9 +98,9 @@ You can also look for information at:
 
 =over 4
 
-=item * RT: CPAN's request tracker (report bugs here)
+=item * github issue list
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Jenkins-API>
+L<https://github.com/colinnewell/Jenkins-API/issues>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 

@@ -21,8 +21,10 @@ perldoc command.
 
 You can also look for information at:
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Jenkins-API
+    github's issue list (report bugs here)
+        https://github.com/colinnewell/Jenkins-API/issues
+
+Once this module hits CPAN you'll be able to use these resources too.
 
     AnnoCPAN, Annotated CPAN documentation
         http://annocpan.org/dist/Jenkins-API

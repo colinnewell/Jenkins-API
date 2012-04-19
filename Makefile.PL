@@ -13,6 +13,21 @@ requires 'XML::LibXML';
 
 build_requires 'Test::Most';
 
+resources(
+        'license',    => 'http://dev.perl.org/licenses/',
+        'homepage',   => 'https://github.com/colinnewell/Jenkins-API',
+        'repository', => {
+            web => 'https://github.com/colinnewell/Jenkins-API',
+            url => 'git://github.com/colinnewell/Jenkins-API.git',
+            type => 'git',
+        },
+        bugtracker  => {
+            web => 'https://github.com/colinnewell/Jenkins-API/issues',
+        }
+);
+
+
+
 auto_install;
 
 WriteAll;
