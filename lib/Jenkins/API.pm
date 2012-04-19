@@ -2,6 +2,7 @@ package Jenkins::API;
 
 use Moose;
 use Jenkins::API::ConfigBuilder;
+use URI::Encode;
 
 =head1 NAME
 
@@ -41,9 +42,12 @@ This is a wrapper around the Jenkins API.
 
 sub create_job
 {
-    my ($self, $job_config) = @_;
+    my ($self, $name, $job_config) = @_;
 
-    $self->_client->POST($self->base_url . '/createItem', $job_config);
+    my $uri = URI::Encode->new({ encode_reserved => 1 });
+    my $safe_name = $uri->encode($name);
+    # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
+    $self->_client->POST($self->base_url . '/createItem?name=' . $safe_name, $job_config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
 }
 
@@ -56,11 +60,11 @@ sub create_job
 
 sub create_job_simple
 {
-    my ($self, $args) = @_;
+    my ($self, $name, $args) = @_;
 
     my $cb = Jenkins::API::ConfigBuilder->new();
     my $xml = $cb->to_xml($args);
-    return $self->create_job($xml);
+    return $self->create_job($name, $xml);
 }
 
 =head1 AUTHOR
