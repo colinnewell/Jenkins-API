@@ -32,7 +32,7 @@ right now...
     use Jenkins::API;
 
     my $jenkins = Jenkins::API->new({ base_url => 'http://jenkins:8080' });
-    my $success = $jenkins->create_job($config_xml);
+    my $success = $jenkins->create_job($project_name, $config_xml);
     ...
 
 =head2 create_job
