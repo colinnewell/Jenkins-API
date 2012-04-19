@@ -36,7 +36,10 @@ This is a wrapper around the Jenkins API.
 
 =head2 create_job
 
-    my $success = $api->create_job($config_xml);
+Takes the project name and the xml for a config file and gets
+Jenkins to create the job.
+
+    my $success = $api->create_job($project_name, $config_xml);
 
 =cut
 
@@ -53,8 +56,12 @@ sub create_job
 
 =head2 create_job_simple
 
-    $self->create_job_simple(
-    );
+Creates a job using a hash of information.  This builds the XML
+to pass to Jenkins for you by using the L<Jenkins::API::ConfigBuilder>.
+See that for details of the hash.  Currently this module is very new
+and the exact details of the hash is very likely to change.
+
+    $self->create_job_simple($project_name, $config_hash);
 
 =cut
 
