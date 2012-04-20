@@ -16,18 +16,18 @@ note 'This is the current status returned by the API';
 explain($status);
 
 note 'This is a more refined query of the API';
-$status = $api->current_status({ tree => 'jobs[name,color]' });
+$status = $api->current_status({ extra_params => { tree => 'jobs[name,color]' }});
 explain $status;
 ok grep { $_ eq 'Test-Project' } map { $_->{name} } @{$status->{jobs}};
 
-$status = $api->current_status({ depth => 1 });
-note 'With depth => 1';
+$status = $api->current_status({ path_parts => [qw/job Test-Project/], extra_params => { depth => 1 }});
+note 'Querying job Test-Project with depth => 1';
 explain $status;
 
 my $build_status = $api->build_queue;
 note 'Build queue';
 explain $build_status;
-$build_status = $api->build_queue({ depth => 1 });;
+$build_status = $api->build_queue({ extra_params => { depth => 1 }});;
 note 'With depth => 1';
 explain $build_status;
 

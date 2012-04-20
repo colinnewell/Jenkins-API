@@ -82,12 +82,12 @@ is a hash containing a fairly comprehensive list of what's going on.
 
 It is also possible to pass two parameters to the query to refine or 
 expand the data you get back.  The tree parameter allows you to select
-specific elements. The example from the Jenkins documentation , C<tree=> 'jobs[name],views[name,jobs[name]]'> demonstrates the syntax nicely.
+specific elements. The example from the Jenkins documentation , C<< tree=> 'jobs[name],views[name,jobs[name]]' >> demonstrates the syntax nicely.
 
 The other parameter you can pass is depth, by default it's 0, if you set
 it higher it dumps a ton of data.
 
-    $jenkins->current_status({ tree => 'jobs[name,color]' });;
+    $jenkins->current_status({ extra_params => { tree => 'jobs[name,color]' }});;
     # {
     #   'jobs' => [
     #     {
@@ -97,8 +97,21 @@ it higher it dumps a ton of data.
     #   ]
     # }
 
-    $jenkins->current_status({ depth => 1 });
+    $jenkins->current_status({ extra_params => { depth => 1 }});
     # returns everything and the kitchen sink.
+
+It is also possible to only look at a subset of the data.  Most urls
+you can see on the website in Jenkins can be accessed.  If you have a 
+job named Test-Project for example with the url C</job/Test-Project> you
+can specify the C<< path_parts => ['job', 'Test-Project'] >> to look at the
+data for that job alone.
+
+    $jenkins->current_status({ 
+        path_parts => [qw/job Test-Project/],
+        extra_params => { depth => 1 },
+    });
+    # just returns the data relating to job Test-Project.
+    # returning it in detail.
 
 =head2 build_queue
 
@@ -106,7 +119,7 @@ This returns the items in the build queue.
 
     $jenkins->build_queue();
 
-This allows the same parameters as the current_status call.  The
+This allows the same C<extra_params> as the L</current_status> call.  The
 depth and tree parameters work in the same way.  See the Jenkins
 api documentation for more details.
 
@@ -122,7 +135,7 @@ This returns the load statistics for the server.
     #   'totalQueueLength' => {}
     # }
 
-This also allows the same parameters as the current_status call.  The
+This also allows the same C<extra_params> as the L</current_status> call.  The
 depth and tree parameters work in the same way.  See the Jenkins
 api documentation for more details.
 
@@ -169,10 +182,12 @@ sub _json_api
 {
     my $self = shift;
     my $uri_parts = shift;
-    my $extra_params = shift;
+    my $args = shift;
+    my $extra_params = $args->{extra_params};
+    my $bits = $args->{path_parts} || [];
 
     my $uri = URI->new($self->base_url);
-    $uri->path_segments(@$uri_parts);
+    $uri->path_segments(@$bits, @$uri_parts);
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->as_string);
     die 'Invalid response' unless $self->_client->responseCode eq '200';
@@ -207,6 +222,11 @@ sub create_job_simple
 Colin Newell, C<< <colin.newell at gmail.com> >>
 
 =head1 BUGS
+
+The API wrapper doesn't deal with jenkins installations not running from
+the root path.  I don't actually know if that's an install option, but
+the internal url building just doesn't deal with that situation properly.
+If you want that fixing a patch is welcome.
 
 Please report any bugs or feature requests to through the web interface 
 at L<https://github.com/colinnewell/Jenkins-API/issues/new>.  I will 
@@ -243,6 +263,15 @@ L<http://search.cpan.org/dist/Jenkins-API/>
 
 =back
 
+=head1 SEE ALSO
+
+=over 4
+
+=item * Jenkins CI server
+
+L<http://jenkins-ci.org/>
+
+=back
 
 =head1 ACKNOWLEDGEMENTS
 
