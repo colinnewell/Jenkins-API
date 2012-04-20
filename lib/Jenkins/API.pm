@@ -42,6 +42,14 @@ This is a wrapper around the Jenkins API.
     my $success = $jenkins->create_job($project_name, $config_xml);
     ...
 
+=head2 check_jenkins_url
+
+Checks the url provided to the api has a Jenkins server running on it.
+It returns the version number of the Jenkins server if it is running.
+
+    $jenkins->check_jenkins_url;
+    # 1.460
+
 =head2 current_status
 
 Returns the current status of the server as returned by the API.  This 
@@ -158,6 +166,14 @@ sub create_job
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
     $self->_client->POST($uri->as_string, $job_config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
+}
+
+sub check_jenkins_url
+{
+    my $self = shift;
+    $self->_client->GET($self->base_url);
+    return $self->_client->responseCode() eq '200'
+        && $self->_client->responseHeader('X-Jenkins');
 }
 
 sub build_queue
