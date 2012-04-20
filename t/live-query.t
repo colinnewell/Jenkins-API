@@ -31,4 +31,9 @@ $build_status = $api->build_queue({ depth => 1 });;
 note 'With depth => 1';
 explain $build_status;
 
+my $statistics = $api->load_statistics;
+
+note 'Load statistics';
+explain $statistics;
+
 done_testing;

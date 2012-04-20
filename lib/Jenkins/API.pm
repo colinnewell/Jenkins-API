@@ -106,6 +106,26 @@ This returns the items in the build queue.
 
     $jenkins->build_queue();
 
+This allows the same parameters as the current_status call.  The
+depth and tree parameters work in the same way.  See the Jenkins
+api documentation for more details.
+
+=head2 load_statistics
+
+This returns the load statistics for the server.
+
+    $jenkins->load_statistics();
+    # {
+    #   'busyExecutors' => {},
+    #   'queueLength' => {},
+    #   'totalExecutors' => {},
+    #   'totalQueueLength' => {}
+    # }
+
+This also allows the same parameters as the current_status call.  The
+depth and tree parameters work in the same way.  See the Jenkins
+api documentation for more details.
+
 =head2 create_job
 
 Takes the project name and the xml for a config file and gets
@@ -131,6 +151,12 @@ sub build_queue
 {
     my $self = shift;
     return $self->_json_api(['queue', 'api','json'], @_);
+}
+
+sub load_statistics
+{
+    my $self = shift;
+    return $self->_json_api(['overallLoad', 'api','json'], @_);
 }
 
 sub current_status
