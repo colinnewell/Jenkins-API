@@ -121,6 +121,19 @@ data for that job alone.
     # just returns the data relating to job Test-Project.
     # returning it in detail.
 
+=head2 trigger_build
+
+Trigger a build,
+
+    $success = $jenkins->trigger_build('Test-Project');
+
+If you need to specify a token you can pass that like this,
+
+    $jenkins->trigger_build('Test-Project', { token => $token });
+
+Note that the success response is simply to indicate that the build
+has been scheduled, not that the build has succeeded.
+
 =head2 build_queue
 
 This returns the items in the build queue.
@@ -166,6 +179,19 @@ sub create_job
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
     $self->_client->POST($uri->as_string, $job_config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
+}
+
+sub trigger_build
+{
+    my $self = shift;
+    my $job = shift;
+    my $extra_params = shift;
+
+    my $uri = URI->new($self->base_url);
+    $uri->path_segments('job', $job, 'build');
+    $uri->query_form($extra_params) if $extra_params;
+    $self->_client->GET($uri->as_string);
+    return $self->_client->responseCode eq '302';
 }
 
 sub check_jenkins_url

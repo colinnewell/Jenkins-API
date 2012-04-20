@@ -25,7 +25,7 @@ ok $api->create_job_simple('Test-Project',
               { 
                 name => "",
                 refspec => {},
-                url => "ssh://git/....", 
+                url => "git://github.com/colinnewell/Jenkins-API.git",
               }, 
             },
             branches => { 'hudson.plugins.git.BranchSpec' => { name => "master", }, },
@@ -84,6 +84,7 @@ ok $api->create_job_simple('Test-Project',
           buildWrappers => {}, 
         }
 );
+$api->trigger_build('Test-Project');
 
 done_testing;
 
