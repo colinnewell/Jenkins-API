@@ -31,6 +31,14 @@ This is a wrapper around the Jenkins API.
     use Jenkins::API;
 
     my $jenkins = Jenkins::API->new({ base_url => 'http://jenkins:8080' });
+    my $status = $jenkins->current_status();
+    my @not_succeeded = grep { $_->{color} ne 'blue' } @{$status->{jobs}};
+    # {
+    #   'color' => 'red',
+    #   'name' => 'Test-Project',
+    #   'url' => 'http://jenkins:8080/job/Test-Project/',
+    # }
+
     my $success = $jenkins->create_job($project_name, $config_xml);
     ...
 
