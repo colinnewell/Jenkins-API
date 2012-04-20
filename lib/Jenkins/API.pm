@@ -100,6 +100,12 @@ it higher it dumps a ton of data.
     $jenkins->current_status({ depth => 1 });
     # returns everything and the kitchen sink.
 
+=head2 build_queue
+
+This returns the items in the build queue.
+
+    $jenkins->build_queue();
+
 =head2 create_job
 
 Takes the project name and the xml for a config file and gets
@@ -121,13 +127,26 @@ sub create_job
     return $self->_client->responseCode() eq '200';
 }
 
+sub build_queue
+{
+    my $self = shift;
+    return $self->_json_api(['queue', 'api','json'], @_);
+}
+
 sub current_status
 {
     my $self = shift;
+    return $self->_json_api(['api','json'], @_);
+}
+
+sub _json_api
+{
+    my $self = shift;
+    my $uri_parts = shift;
     my $extra_params = shift;
 
     my $uri = URI->new($self->base_url);
-    $uri->path_segments('api','json');
+    $uri->path_segments(@$uri_parts);
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->as_string);
     die 'Invalid response' unless $self->_client->responseCode eq '200';
