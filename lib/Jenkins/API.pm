@@ -80,6 +80,26 @@ is a hash containing a fairly comprehensive list of what's going on.
     #   ]
     # }
 
+It is also possible to pass two parameters to the query to refine or 
+expand the data you get back.  The tree parameter allows you to select
+specific elements. The example from the Jenkins documentation , C<tree=> 'jobs[name],views[name,jobs[name]]'> demonstrates the syntax nicely.
+
+The other parameter you can pass is depth, by default it's 0, if you set
+it higher it dumps a ton of data.
+
+    $jenkins->current_status({ tree => 'jobs[name,color]' });;
+    # {
+    #   'jobs' => [
+    #     {
+    #       'color' => 'blue',
+    #       'name' => 'Jenkins-API',
+    #     },
+    #   ]
+    # }
+
+    $jenkins->current_status({ depth => 1 });
+    # returns everything and the kitchen sink.
+
 =head2 create_job
 
 Takes the project name and the xml for a config file and gets
@@ -104,9 +124,11 @@ sub create_job
 sub current_status
 {
     my $self = shift;
+    my $extra_params = shift;
 
     my $uri = URI->new($self->base_url);
     $uri->path_segments('api','json');
+    $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->as_string);
     die 'Invalid response' unless $self->_client->responseCode eq '200';
     # NOTE: my server returns UTF8, if this turns out to be a broken

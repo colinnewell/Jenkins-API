@@ -90,5 +90,12 @@ ok grep { $_ eq 'Test-Project' } map { $_->{name} } @{$status->{jobs}};
 note 'This is the current status returned by the API';
 explain($status);
 
+note 'This is a more refined query of the API';
+my $status = $api->current_status({ tree => 'jobs[name,color]' });
+explain $status;
+ok grep { $_ eq 'Test-Project' } map { $_->{name} } @{$status->{jobs}};
+
+my $status = $api->current_status({ depth => 1 });
+explain $status;
 done_testing;
 
