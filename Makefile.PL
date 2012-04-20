@@ -6,10 +6,11 @@ author   q{Colin Newell <colin.newell@gmail.com>};
 license  'perl';
 
 requires 'REST::Client';
-requires 'URI::Encode';
+requires 'URI';
 requires 'File::ShareDir';
 requires 'XML::Compile';
 requires 'XML::LibXML';
+requires 'JSON';
 
 build_requires 'Test::Most';
 

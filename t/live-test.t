@@ -85,5 +85,10 @@ ok $api->create_job_simple('Test-Project',
         }
 );
 
+my $status = $api->current_status;
+ok grep { $_ eq 'Test-Project' } map { $_->{name} } @{$status->{jobs}};
+note 'This is the current status returned by the API';
+explain($status);
+
 done_testing;
 

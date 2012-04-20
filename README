@@ -3,8 +3,8 @@ Jenkins-API
 This module is a wrapper around the Jenkins API.  
 
 NOTE: this module is still very much a work in progress.  
-Currently only the createJob function is implemented and the API
-for the job config construction is just a bodge job right now.
+Currently the API for the job config construction is just 
+a bodge job right now.
 
 INSTALLATION
 

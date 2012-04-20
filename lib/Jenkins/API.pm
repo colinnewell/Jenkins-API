@@ -2,7 +2,7 @@ package Jenkins::API;
 
 use Moose;
 use Jenkins::API::ConfigBuilder;
-use URI::Encode;
+use JSON;
 
 =head1 NAME
 
@@ -26,14 +26,51 @@ has base_url => (is => 'ro', isa => 'Str', required => 1);
 
 =head1 SYNOPSIS
 
-This is a wrapper around the Jenkins API.  Well the create job function
-right now...
+This is a wrapper around the Jenkins API.  
 
     use Jenkins::API;
 
     my $jenkins = Jenkins::API->new({ base_url => 'http://jenkins:8080' });
     my $success = $jenkins->create_job($project_name, $config_xml);
     ...
+
+=head2 current_status
+
+Returns the current status of the server as returned by the API.  This 
+is a hash containing a fairly comprehensive list of what's going on.
+
+    $jenkins->current_status();
+    # {
+    #   'assignedLabels' => [
+    #     {}
+    #   ],
+    #   'description' => undef,
+    #   'jobs' => [
+    #     {
+    #       'color' => 'blue',
+    #       'name' => 'Jenkins-API',
+    #       'url' => 'http://jenkins:8080/job/Jenkins-API/'
+    #     },
+    #   'mode' => 'NORMAL',
+    #   'nodeDescription' => 'the master Jenkins node',
+    #   'nodeName' => '',
+    #   'numExecutors' => 2,
+    #   'overallLoad' => {},
+    #   'primaryView' => {
+    #     'name' => 'All',
+    #     'url' => 'http://jenkins:8080/'
+    #   },
+    #   'quietingDown' => bless( do{\(my $o = 0)}, 'JSON::XS::Boolean' ),
+    #   'slaveAgentPort' => 0,
+    #   'useCrumbs' => $VAR1->{'quietingDown'},
+    #   'useSecurity' => $VAR1->{'quietingDown'},
+    #   'views' => [
+    #     {
+    #       'name' => 'All',
+    #       'url' => 'http://jenkins:8080/'
+    #     }
+    #   ]
+    # }
 
 =head2 create_job
 
@@ -48,11 +85,26 @@ sub create_job
 {
     my ($self, $name, $job_config) = @_;
 
-    my $uri = URI::Encode->new({ encode_reserved => 1 });
-    my $safe_name = $uri->encode($name);
+    my $uri = URI->new($self->base_url);
+    $uri->path_segments('createItem');
+    $uri->query_form( name => $name );
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
-    $self->_client->POST($self->base_url . '/createItem?name=' . $safe_name, $job_config, { 'Content-Type' => 'text/xml' });
+    $self->_client->POST($uri->as_string, $job_config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
+}
+
+sub current_status
+{
+    my $self = shift;
+
+    my $uri = URI->new($self->base_url);
+    $uri->path_segments('api','json');
+    $self->_client->GET($uri->as_string);
+    die 'Invalid response' unless $self->_client->responseCode eq '200';
+    # NOTE: my server returns UTF8, if this turns out to be a broken
+    # assumption read the Content-Type header.
+    my $data = JSON->new->utf8->decode($self->_client->responseContent());
+    return $data;
 }
 
 =head2 create_job_simple
