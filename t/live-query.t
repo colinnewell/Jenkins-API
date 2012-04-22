@@ -16,7 +16,8 @@ ok $v, 'Jenkins running on ' . $url;
 explain $v;
 
 my $status = $api->current_status;
-ok grep { $_ eq 'Test-Project' } map { $_->{name} } @{$status->{jobs}};
+ok ((grep { $_ eq 'Test-Project' } map { $_->{name} } @{$status->{jobs}}),
+    'Ensure we found the Test-Project');
 note 'This is the current status returned by the API';
 explain($status);
 
@@ -37,6 +38,8 @@ note 'With depth => 1';
 explain $build_status;
 
 my $statistics = $api->load_statistics;
+is $api->response_code, '200';
+ok $api->response_content;
 
 note 'Load statistics';
 explain $statistics;

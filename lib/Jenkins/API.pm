@@ -121,6 +121,10 @@ data for that job alone.
     # just returns the data relating to job Test-Project.
     # returning it in detail.
 
+The method will die saying 'Invalid response' if the server doesn't
+respond as it expects, or die with a JSON decoding error if the JSON
+parsing fails.
+
 =head2 trigger_build
 
 Trigger a build,
@@ -144,6 +148,10 @@ This allows the same C<extra_params> as the L</current_status> call.  The
 depth and tree parameters work in the same way.  See the Jenkins
 api documentation for more details.
 
+The method will die saying 'Invalid response' if the server doesn't
+respond as it expects, or die with a JSON decoding error if the JSON
+parsing fails.
+
 =head2 load_statistics
 
 This returns the load statistics for the server.
@@ -159,6 +167,10 @@ This returns the load statistics for the server.
 This also allows the same C<extra_params> as the L</current_status> call.  The
 depth and tree parameters work in the same way.  See the Jenkins
 api documentation for more details.
+
+The method will die saying 'Invalid response' if the server doesn't
+respond as it expects, or die with a JSON decoding error if the JSON
+parsing fails.
 
 =head2 create_job
 
@@ -258,6 +270,34 @@ sub create_job_simple
     my $xml = $cb->to_xml($args);
     return $self->create_job($name, $xml);
 }
+
+=head2 response_code
+
+This method returns the HTTP response code from our last request to 
+the Jenkins server.  This may be useful when an error occurred.
+
+=cut
+
+sub response_code
+{
+    my $self = shift;
+    return $self->_client->responseCode;
+}
+
+=head2 response_content
+
+This method returns the content of the HTTP response from our 
+last request to the Jenkins server.  This may be useful when 
+an error occurrs.
+
+=cut
+
+sub response_content
+{
+    my $self = shift;
+    return $self->_client->responseContent;
+}
+
 
 =head1 AUTHOR
 
