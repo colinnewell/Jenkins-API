@@ -2,11 +2,15 @@ blib*
 Makefile
 Makefile.old
 Build
+inc
+MYMETA*
 Build.bat
 _build*
 pm_to_blib*
 *.tar.gz
 .lwpcookies
+MANIFEST
+META.*
 cover_db
 pod2htm*.tmp
 Jenkins-API-*
