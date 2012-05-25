@@ -3,6 +3,7 @@ use Test::Most;
 BEGIN {
     unless ($ENV{LIVE_TEST_JENKINS_URL})
     {
+        # NOTE: the test server needs to have a project named Test-Project on it to pass.
         plan skip_all => 'Set LIVE_TEST_JENKINS_URL if you want to run these tests against a live jenkins server';
     }
 }

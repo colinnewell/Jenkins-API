@@ -251,26 +251,6 @@ sub _json_api
     return $data;
 }
 
-=head2 create_job_simple
-
-Creates a job using a hash of information.  This builds the XML
-to pass to Jenkins for you by using the L<Jenkins::API::ConfigBuilder>.
-See that for details of the hash.  Currently this module is very new
-and the exact details of the hash are very likely to change.
-
-    $self->create_job_simple($project_name, $config_hash);
-
-=cut
-
-sub create_job_simple
-{
-    my ($self, $name, $args) = @_;
-
-    my $cb = Jenkins::API::ConfigBuilder->new();
-    my $xml = $cb->to_xml($args);
-    return $self->create_job($name, $xml);
-}
-
 =head2 response_code
 
 This method returns the HTTP response code from our last request to 
