@@ -2,9 +2,8 @@ Jenkins-API
 
 This module is a wrapper around the Jenkins API.  
 
-NOTE: this module is still very much a work in progress.  
-Currently the API for the job config construction is just 
-a bodge job right now.
+It provides a simple set of methods for talking
+to the Jenkins API.
 
 INSTALLATION
 
@@ -26,6 +25,10 @@ You can also look for information at:
 
     github's issue list (report bugs here)
         https://github.com/colinnewell/Jenkins-API/issues
+
+    Jenkins CI - the program this module communicates with.
+        http://jenkins-ci.org/
+
 
 Once this module hits CPAN you'll be able to use these resources too.
 
