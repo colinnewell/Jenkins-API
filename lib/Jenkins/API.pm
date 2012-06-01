@@ -1,7 +1,6 @@
 package Jenkins::API;
 
 use Moose;
-use Jenkins::API::ConfigBuilder;
 use JSON;
 
 =head1 NAME
