@@ -205,6 +205,31 @@ sub trigger_build
     return $self->_client->responseCode eq '302';
 }
 
+sub project_config
+{
+    my $self = shift;
+    my $job = shift;
+    my $extra_params = shift;
+
+    my $uri = URI->new($self->base_url);
+    $uri->path_segments('job', $job, 'config.xml');
+    $uri->query_form($extra_params) if $extra_params;
+    $self->_client->GET($uri->as_string);
+    return $self->_client->content;
+}
+
+sub set_project_config
+{
+    my $self = shift;
+    my $job = shift;
+    my $config = shift;
+
+    my $uri = URI->new($self->base_url);
+    $uri->path_segments('job', $job, 'config.xml');
+    $self->_client->POST($uri->as_string, $config, { 'Content-Type' => 'text/xml' });
+    return $self->_client->responseCode() eq '200';
+}
+
 sub check_jenkins_url
 {
     my $self = shift;
