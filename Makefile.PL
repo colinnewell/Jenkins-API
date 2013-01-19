@@ -8,8 +8,6 @@ license  'perl';
 requires 'REST::Client';
 requires 'URI';
 requires 'File::ShareDir';
-requires 'XML::Compile';
-requires 'XML::LibXML';
 requires 'JSON';
 
 build_requires 'Test::Most';
