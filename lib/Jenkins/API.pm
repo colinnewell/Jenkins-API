@@ -385,6 +385,18 @@ L<http://search.cpan.org/dist/Jenkins-API/>
 
 L<http://jenkins-ci.org/>
 
+=item * Net::Jenkins
+
+An alternative to this library.
+
+L<https://metacpan.org/module/Net::Jenkins>
+
+=item * Task::Jenkins
+
+Libraries for use testing modules on a Jenkins server.
+
+L<https://metacpan.org/module/Task::Jenkins>
+
 =back
 
 =head1 ACKNOWLEDGEMENTS
@@ -392,7 +404,7 @@ L<http://jenkins-ci.org/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012 Colin Newell.
+Copyright 2012-3 Colin Newell.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
