@@ -9,6 +9,7 @@ requires 'REST::Client';
 requires 'URI';
 requires 'File::ShareDir';
 requires 'JSON';
+requires 'Moose';
 
 build_requires 'Test::Most';
 
