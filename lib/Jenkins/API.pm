@@ -178,6 +178,24 @@ Jenkins to create the job.
 
     my $success = $api->create_job($project_name, $config_xml);
 
+=head2 project_config
+
+This method returns the configuration for the project in xml.
+
+    my $config = $api->project_config($project_name);
+
+=head2 set_project_config
+
+This method allows you to set the configuration for the project using xml.
+
+    my $success = $api->set_project_config($project_name, $config);
+
+=head2 delete_project
+
+Delete the project from Jenkins.
+
+    my $success = $api->delete_project($project_name);
+
 =cut
 
 sub create_job
@@ -190,6 +208,16 @@ sub create_job
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
     $self->_client->POST($uri->as_string, $job_config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
+}
+
+sub delete_project
+{
+    my ($self, $name) = @_;
+
+    my $uri = URI->new($self->base_url);
+    $uri->path_segments('job', $name, 'doDelete');
+    $self->_client->POST($uri->as_string, undef, { 'Content-Type' => 'text/xml' });
+    return $self->_client->responseCode() eq '302';
 }
 
 sub trigger_build
