@@ -9,13 +9,13 @@ Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 METHODS
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has '_client' => (is => 'ro', default => sub {
     require REST::Client;
