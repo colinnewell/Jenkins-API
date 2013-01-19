@@ -41,6 +41,7 @@ explain $build_status;
 my $statistics = $api->load_statistics;
 is $api->response_code, '200';
 ok $api->response_content;
+explain $api->project_config('Test-Project');
 
 note 'Load statistics';
 explain $statistics;

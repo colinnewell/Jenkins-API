@@ -243,7 +243,7 @@ sub project_config
     $uri->path_segments('job', $job, 'config.xml');
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->as_string);
-    return $self->_client->content;
+    return $self->_client->responseContent;
 }
 
 sub set_project_config
