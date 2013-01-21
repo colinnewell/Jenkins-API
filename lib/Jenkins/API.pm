@@ -11,8 +11,6 @@ Jenkins::API - A wrapper around the Jenkins API
 
 Version 0.02
 
-=head1 METHODS
-
 =cut
 
 our $VERSION = '0.02';
@@ -40,6 +38,8 @@ This is a wrapper around the Jenkins API.
 
     my $success = $jenkins->create_job($project_name, $config_xml);
     ...
+
+=head1 METHODS
 
 =head2 check_jenkins_url
 
@@ -393,7 +393,7 @@ L<https://metacpan.org/module/Net::Jenkins>
 
 =item * Task::Jenkins
 
-Libraries for use testing modules on a Jenkins server.
+Libraries to help testing modules on a Jenkins server.
 
 L<https://metacpan.org/module/Task::Jenkins>
 
