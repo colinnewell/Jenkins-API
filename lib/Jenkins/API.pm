@@ -9,11 +9,11 @@ Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 has '_client' => (is => 'ro', default => sub {
     require REST::Client;
@@ -422,10 +422,13 @@ L<https://metacpan.org/module/Task::Jenkins>
 
 =head1 ACKNOWLEDGEMENTS
 
+Birmingham Perl Mongers for feedback before I released this to CPAN.
+
+With thanks to Nick Hu for adding the trigger_build_with_parameters method.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012-3 Colin Newell.
+Copyright 2012-2013 Colin Newell.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

@@ -1,5 +1,8 @@
 Revision history for Jenkins-API
 
+0.03    2013-02-15
+        Added support for builds with parameters (Nick Hu)
+
 0.02    2013-01-19
         First CPAN release.
 
