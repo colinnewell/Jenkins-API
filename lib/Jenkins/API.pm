@@ -137,6 +137,14 @@ If you need to specify a token you can pass that like this,
 Note that the success response is simply to indicate that the build
 has been scheduled, not that the build has succeeded.
 
+=head2 trigger_build_with_parameters
+
+Trigger a build with parameters,
+
+    $success = $jenkins->trigger_build_with_parameters('Test-Project', { Parameter => 'Value' } );
+
+The method behaves the same way as L<trigger_build>.
+
 =head2 build_queue
 
 This returns the items in the build queue.
@@ -222,12 +230,25 @@ sub delete_project
 
 sub trigger_build
 {
+  my $self = shift;
+  return $self->_trigger_build('build', @_);
+}
+
+sub trigger_build_with_parameters
+{
+  my $self = shift;
+  return $self->_trigger_build('buildWithParameters', @_);
+}
+
+sub _trigger_build
+{
     my $self = shift;
+    my $build_url = shift;
     my $job = shift;
     my $extra_params = shift;
 
     my $uri = URI->new($self->base_url);
-    $uri->path_segments('job', $job, 'build');
+    $uri->path_segments('job', $job, $build_url);
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->as_string);
     return $self->_client->responseCode eq '302';
