@@ -14,16 +14,10 @@ requires 'Moose';
 build_requires 'Test::Most';
 
 resources(
-        'license',    => 'http://dev.perl.org/licenses/',
-        'homepage',   => 'https://github.com/colinnewell/Jenkins-API',
-        'repository', => {
-            web => 'https://github.com/colinnewell/Jenkins-API',
-            url => 'git://github.com/colinnewell/Jenkins-API.git',
-            type => 'git',
-        },
-        bugtracker  => {
-            web => 'https://github.com/colinnewell/Jenkins-API/issues',
-        }
+        'license'    => 'http://dev.perl.org/licenses/',
+        'homepage'   => 'https://github.com/colinnewell/Jenkins-API',
+        'repository' => 'https://github.com/colinnewell/Jenkins-API',
+        'bugtracker'  => 'https://github.com/colinnewell/Jenkins-API/issues',
 );
 
 
