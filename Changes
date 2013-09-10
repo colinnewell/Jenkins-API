@@ -1,5 +1,8 @@
 Revision history for Jenkins-API
 
+0.04    2013-09-10
+        Minor Makefile clean up courtesy of David Steinbrunner
+
 0.03    2013-02-15
         Added support for builds with parameters (Nick Hu)
 
