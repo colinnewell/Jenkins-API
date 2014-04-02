@@ -2,6 +2,7 @@ package Jenkins::API;
 
 use Moose;
 use JSON;
+use MIME::Base64;
 
 =head1 NAME
 
@@ -15,11 +16,21 @@ Version 0.04
 
 our $VERSION = '0.04';
 
-has '_client' => (is => 'ro', default => sub {
-    require REST::Client;
-    REST::Client->new();
-});
 has base_url => (is => 'ro', isa => 'Str', required => 1);
+has APIKey => (is => 'ro', isa => 'Str', required => 0);
+has APIPass => (is => 'ro', isa => 'Str', required => 0);
+
+has '_client' => (is => 'ro', default => sub {
+    my $self = shift;
+    require REST::Client;
+    my $client = REST::Client->new();
+    $client->setHost($self->base_url);
+    if (defined($self->APIKey) and defined($self->APIPass)) {
+        $client->addHeader("Authorization", "Basic " .
+                   encode_base64($self->APIKey . ':' . $self->APIPass)); 
+    }
+    return $client;
+});
 
 =head1 SYNOPSIS
 
@@ -282,7 +293,7 @@ sub set_project_config
 sub check_jenkins_url
 {
     my $self = shift;
-    $self->_client->GET($self->base_url);
+    $self->_client->GET('/');
     return $self->_client->responseCode() eq '200'
         && $self->_client->responseHeader('X-Jenkins');
 }
@@ -316,6 +327,7 @@ sub _json_api
     my $uri = URI->new($self->base_url);
     $uri->path_segments(@$bits, @$uri_parts);
     $uri->query_form($extra_params) if $extra_params;
+
     $self->_client->GET($uri->as_string);
     die 'Invalid response' unless $self->_client->responseCode eq '200';
     # NOTE: my server returns UTF8, if this turns out to be a broken
