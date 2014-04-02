@@ -329,6 +329,7 @@ sub _json_api
     $uri->query_form($extra_params) if $extra_params;
 
     $self->_client->GET($uri->as_string);
+    print "DEBUG response code is [" . $self->_client->responseCode . "]\n";
     die 'Invalid response' unless $self->_client->responseCode eq '200';
     # NOTE: my server returns UTF8, if this turns out to be a broken
     # assumption read the Content-Type header.
