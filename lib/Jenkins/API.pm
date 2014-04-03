@@ -225,7 +225,7 @@ sub create_job
     $uri->path_segments('createItem');
     $uri->query_form( name => $name );
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
-    $self->_client->POST($uri->as_string, $job_config, { 'Content-Type' => 'text/xml' });
+    $self->_client->POST($uri->path_query, $job_config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
 }
 
@@ -235,7 +235,7 @@ sub delete_project
 
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $name, 'doDelete');
-    $self->_client->POST($uri->as_string, undef, { 'Content-Type' => 'text/xml' });
+    $self->_client->POST($uri->path_query, undef, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '302';
 }
 
@@ -261,7 +261,7 @@ sub _trigger_build
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, $build_url);
     $uri->query_form($extra_params) if $extra_params;
-    $self->_client->GET($uri->as_string);
+    $self->_client->GET($uri->path_query);
     return $self->_client->responseCode eq '302';
 }
 
@@ -274,7 +274,7 @@ sub project_config
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, 'config.xml');
     $uri->query_form($extra_params) if $extra_params;
-    $self->_client->GET($uri->as_string);
+    $self->_client->GET($uri->path_query);
     return $self->_client->responseContent;
 }
 
@@ -286,7 +286,7 @@ sub set_project_config
 
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, 'config.xml');
-    $self->_client->POST($uri->as_string, $config, { 'Content-Type' => 'text/xml' });
+    $self->_client->POST($uri->path_query, $config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
 }
 
@@ -328,8 +328,7 @@ sub _json_api
     $uri->path_segments(@$bits, @$uri_parts);
     $uri->query_form($extra_params) if $extra_params;
 
-    $self->_client->GET($uri->as_string);
-    print "DEBUG response code is [" . $self->_client->responseCode . "]\n";
+    $self->_client->GET($uri->path_query);
     die 'Invalid response' unless $self->_client->responseCode eq '200';
     # NOTE: my server returns UTF8, if this turns out to be a broken
     # assumption read the Content-Type header.
