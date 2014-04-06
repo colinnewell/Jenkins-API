@@ -10,6 +10,7 @@ requires 'URI';
 requires 'File::ShareDir';
 requires 'JSON';
 requires 'Moose';
+requires 'MIME::Base64';
 
 build_requires 'Test::Most';
 

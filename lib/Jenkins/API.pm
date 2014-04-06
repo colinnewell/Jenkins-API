@@ -2,6 +2,7 @@ package Jenkins::API;
 
 use Moose;
 use JSON;
+use MIME::Base64;
 
 =head1 NAME
 
@@ -15,11 +16,21 @@ Version 0.04
 
 our $VERSION = '0.04';
 
-has '_client' => (is => 'ro', default => sub {
-    require REST::Client;
-    REST::Client->new();
-});
 has base_url => (is => 'ro', isa => 'Str', required => 1);
+has api_key => (is => 'ro', isa => 'Str', required => 0);
+has api_pass => (is => 'ro', isa => 'Str', required => 0);
+
+has '_client' => (is => 'ro', default => sub {
+    my $self = shift;
+    require REST::Client;
+    my $client = REST::Client->new();
+    $client->setHost($self->base_url);
+    if (defined($self->api_key) and defined($self->api_pass)) {
+        $client->addHeader("Authorization", "Basic " .
+                   encode_base64($self->api_key . ':' . $self->api_pass)); 
+    }
+    return $client;
+});
 
 =head1 SYNOPSIS
 
@@ -214,7 +225,7 @@ sub create_job
     $uri->path_segments('createItem');
     $uri->query_form( name => $name );
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
-    $self->_client->POST($uri->as_string, $job_config, { 'Content-Type' => 'text/xml' });
+    $self->_client->POST($uri->path_query, $job_config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
 }
 
@@ -224,7 +235,7 @@ sub delete_project
 
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $name, 'doDelete');
-    $self->_client->POST($uri->as_string, undef, { 'Content-Type' => 'text/xml' });
+    $self->_client->POST($uri->path_query, undef, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '302';
 }
 
@@ -250,7 +261,7 @@ sub _trigger_build
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, $build_url);
     $uri->query_form($extra_params) if $extra_params;
-    $self->_client->GET($uri->as_string);
+    $self->_client->GET($uri->path_query);
     return $self->_client->responseCode eq '302';
 }
 
@@ -263,7 +274,7 @@ sub project_config
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, 'config.xml');
     $uri->query_form($extra_params) if $extra_params;
-    $self->_client->GET($uri->as_string);
+    $self->_client->GET($uri->path_query);
     return $self->_client->responseContent;
 }
 
@@ -275,14 +286,14 @@ sub set_project_config
 
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, 'config.xml');
-    $self->_client->POST($uri->as_string, $config, { 'Content-Type' => 'text/xml' });
+    $self->_client->POST($uri->path_query, $config, { 'Content-Type' => 'text/xml' });
     return $self->_client->responseCode() eq '200';
 }
 
 sub check_jenkins_url
 {
     my $self = shift;
-    $self->_client->GET($self->base_url);
+    $self->_client->GET('/');
     return $self->_client->responseCode() eq '200'
         && $self->_client->responseHeader('X-Jenkins');
 }
@@ -316,7 +327,8 @@ sub _json_api
     my $uri = URI->new($self->base_url);
     $uri->path_segments(@$bits, @$uri_parts);
     $uri->query_form($extra_params) if $extra_params;
-    $self->_client->GET($uri->as_string);
+
+    $self->_client->GET($uri->path_query);
     die 'Invalid response' unless $self->_client->responseCode eq '200';
     # NOTE: my server returns UTF8, if this turns out to be a broken
     # assumption read the Content-Type header.
