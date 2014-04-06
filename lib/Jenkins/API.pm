@@ -17,17 +17,17 @@ Version 0.04
 our $VERSION = '0.04';
 
 has base_url => (is => 'ro', isa => 'Str', required => 1);
-has APIKey => (is => 'ro', isa => 'Str', required => 0);
-has APIPass => (is => 'ro', isa => 'Str', required => 0);
+has api_key => (is => 'ro', isa => 'Str', required => 0);
+has api_pass => (is => 'ro', isa => 'Str', required => 0);
 
 has '_client' => (is => 'ro', default => sub {
     my $self = shift;
     require REST::Client;
     my $client = REST::Client->new();
     $client->setHost($self->base_url);
-    if (defined($self->APIKey) and defined($self->APIPass)) {
+    if (defined($self->api_key) and defined($self->api_pass)) {
         $client->addHeader("Authorization", "Basic " .
-                   encode_base64($self->APIKey . ':' . $self->APIPass)); 
+                   encode_base64($self->api_key . ':' . $self->api_pass)); 
     }
     return $client;
 });
