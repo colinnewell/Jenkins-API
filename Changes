@@ -1,5 +1,9 @@
 Revision history for Jenkins-API
 
+0.05    2014-04-22
+        Added support for Basic Authentication (now a common option for Jenkins)
+        [Alex Kulbiy]
+
 0.04    2013-09-10
         Minor Makefile clean up courtesy of David Steinbrunner
 

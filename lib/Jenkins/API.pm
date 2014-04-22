@@ -50,6 +50,26 @@ This is a wrapper around the Jenkins API.
     my $success = $jenkins->create_job($project_name, $config_xml);
     ...
 
+=head2 ATTRIBUTES
+
+Specify these attributes to the constructor of the C<Jenkins::API> object
+if necessary.
+
+=head2 base_url
+
+This is the base url for your jenkins installation.  This is commonly 
+running on port 8080 so it's often something like http://jenkins:8080
+
+=head2 api_key
+
+This is the username for the basic authentication if you have it turned on.
+
+If you don't, don't specify it.
+
+=head2 api_pass
+
+The password for basic auth.
+
 =head1 METHODS
 
 =head2 check_jenkins_url
@@ -438,9 +458,11 @@ Birmingham Perl Mongers for feedback before I released this to CPAN.
 
 With thanks to Nick Hu for adding the trigger_build_with_parameters method.
 
+Alex Kulbiy for the auth support and David Steinbrunner for some Makefile love.
+
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012-2013 Colin Newell.
+Copyright 2012-2014 Colin Newell.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
