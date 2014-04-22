@@ -17,8 +17,8 @@ Version 0.05
 our $VERSION = '0.05';
 
 has base_url => (is => 'ro', isa => 'Str', required => 1);
-has api_key => (is => 'ro', isa => 'Str', required => 0);
-has api_pass => (is => 'ro', isa => 'Str', required => 0);
+has api_key => (is => 'ro', isa => 'Maybe[Str]', required => 0);
+has api_pass => (is => 'ro', isa => 'Maybe[Str]', required => 0);
 
 has '_client' => (is => 'ro', default => sub {
     my $self = shift;
