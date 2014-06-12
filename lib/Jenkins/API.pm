@@ -3,6 +3,8 @@ package Jenkins::API;
 use Moose;
 use JSON;
 use MIME::Base64;
+use URI;
+use REST::Client;
 
 =head1 NAME
 
@@ -20,17 +22,20 @@ has base_url => (is => 'ro', isa => 'Str', required => 1);
 has api_key => (is => 'ro', isa => 'Maybe[Str]', required => 0);
 has api_pass => (is => 'ro', isa => 'Maybe[Str]', required => 0);
 
-has '_client' => (is => 'ro', default => sub {
-    my $self = shift;
-    require REST::Client;
-    my $client = REST::Client->new();
-    $client->setHost($self->base_url);
-    if (defined($self->api_key) and defined($self->api_pass)) {
-        $client->addHeader("Authorization", "Basic " .
-                   encode_base64($self->api_key . ':' . $self->api_pass)); 
+has '_client' => (
+    is      => 'ro',
+    lazy    => 1,
+    default => sub {
+        my $self = shift;
+        my $client = REST::Client->new();
+        $client->setHost($self->base_url);
+        if (defined($self->api_key) and defined($self->api_pass)) {
+            $client->addHeader("Authorization", "Basic " .
+                               encode_base64($self->api_key . ':' . $self->api_pass)); 
+        }
+        return $client;
     }
-    return $client;
-});
+);
 
 =head1 SYNOPSIS
 
