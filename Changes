@@ -1,5 +1,9 @@
 Revision history for Jenkins-API
 
+0.06    2014-06-13
+        Make _client lazy and preload modules
+        [Piers Cawley]
+
 0.05    2014-04-22
         Added support for Basic Authentication (now a common option for Jenkins)
         [Alex Kulbiy]
