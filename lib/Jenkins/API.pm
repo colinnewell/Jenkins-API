@@ -286,7 +286,7 @@ sub _trigger_build
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, $build_url);
     $uri->query_form($extra_params) if $extra_params;
-    $self->_client->GET($uri->path_query);
+    $self->_client->POST($uri->path_query);
     return $self->_client->responseCode eq '302';
 }
 
