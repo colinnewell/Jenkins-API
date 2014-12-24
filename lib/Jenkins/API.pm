@@ -1,6 +1,7 @@
 package Jenkins::API;
 
-use Moose;
+use Moo;
+use Types::Standard -types;
 use JSON;
 use MIME::Base64;
 use URI;
@@ -18,9 +19,9 @@ Version 0.07
 
 our $VERSION = '0.07';
 
-has base_url => (is => 'ro', isa => 'Str', required => 1);
-has api_key => (is => 'ro', isa => 'Maybe[Str]', required => 0);
-has api_pass => (is => 'ro', isa => 'Maybe[Str]', required => 0);
+has base_url => (is => 'ro', isa => Str, required => 1);
+has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
+has api_pass => (is => 'ro', isa => Maybe[Str], required => 0);
 
 has '_client' => (
     is      => 'ro',

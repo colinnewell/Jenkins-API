@@ -1,5 +1,7 @@
 Revision history for Jenkins-API
 
+        Convert to Moo (Arthur Axel 'fREW' Schmidt)
+
 0.07    2014-12-24
         Changed build calls to use POST method rather than GET as newer Jenkins 
         appear to require that now.  Older versions also appear to work with POST
