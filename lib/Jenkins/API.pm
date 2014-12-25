@@ -13,11 +13,11 @@ Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
-Version 0.07
+Version 0.08
 
 =cut
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
@@ -465,6 +465,36 @@ Birmingham Perl Mongers for feedback before I released this to CPAN.
 With thanks to Nick Hu for adding the trigger_build_with_parameters method.
 
 Alex Kulbiy for the auth support and David Steinbrunner for some Makefile love.
+
+=head1 AUTHOR
+
+Colin Newell <colin.newell@gmail.com>
+
+=head1 CONTRIBUTORS
+
+=over 4
+
+=item *
+
+Nick Hu
+
+=item *
+
+David Steinbrunner
+
+=item *
+
+Alex Kulbiy
+
+=item *
+
+Piers Cawley
+
+=item *
+
+Arthur Axel 'fREW' Schmidt
+
+=back
 
 =head1 LICENSE AND COPYRIGHT
 
