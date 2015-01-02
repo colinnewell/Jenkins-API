@@ -72,9 +72,29 @@ This is the username for the basic authentication if you have it turned on.
 
 If you don't, don't specify it.
 
+Note that Jenkins returns 403 error codes if authentication is required
+but hasn't been specified.  A common setup is to allow build statuses to
+be read but triggering builds and making configuration
+changes to require authentication.  Check L</response_code> after making a call
+that fails to see if it is an authentication failure.
+
+    my $success = $jenkins->trigger_build($job_name);
+    unless($success)
+    {
+        if($jenkins->response_code == 403)
+        {
+            print "Auth failure\n";
+        }
+        else
+        {
+            print $jenkins->response_content;
+        }
+    }
+
 =head2 api_pass
 
-The password for basic auth.
+The api token for basic auth.  Go to the Jenkins wiki page on L<authenticating scripted clients|https://wiki.jenkins-ci.org/display/JENKINS/Authenticating+scripted+clients> 
+for information on getting an API token for your user to use for authentication.
 
 =head1 METHODS
 
