@@ -13,11 +13,11 @@ Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
@@ -572,7 +572,7 @@ Arthur Axel 'fREW' Schmidt
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012-2014 Colin Newell.
+Copyright 2012-2015 Colin Newell.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

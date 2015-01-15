@@ -1,5 +1,9 @@
 Revision history for Jenkins-API
 
+0.09    2015-01-15
+        Added new view_status method.
+        Improved documentation of authentication
+
 0.08    2014-12-25
         Convert to Moo (Arthur Axel 'fREW' Schmidt)
 
