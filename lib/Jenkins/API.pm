@@ -207,7 +207,7 @@ provided in the general status report.
     #   'url' => 'http://jenkins-t2:8080/view/Test/'
     # }
 
-This method allows the same sort of refinement as the L<current_status> method.
+This method allows the same sort of refinement as the L</current_status> method.
 To just get the job info from the view for example you can do essentially the same,
 
     use Data::Dumper;
@@ -215,7 +215,7 @@ To just get the job info from the view for example you can do essentially the sa
     my @views = grep { $_ ne 'All' } map { $_->{name} } @{$view_list->{views}};
     for my $view (@views)
     {
-        my $view_jobs = $jenkins->view_status($view, { extra_params => { tree => 'jobs[name,color]' }});
+        my $view_jobs = $api->view_status($view, { extra_params => { tree => 'jobs[name,color]' }});
         print Dumper($view_jobs);
     }
     # {
