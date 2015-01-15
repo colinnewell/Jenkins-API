@@ -181,6 +181,53 @@ The method will die saying 'Invalid response' if the server doesn't
 respond as it expects, or die with a JSON decoding error if the JSON
 parsing fails.
 
+=head2 view_status
+
+Provides the status of the specified view.  The list of views is 
+provided in the general status report.
+
+    $jenkins->view_status('MyView');
+    # {
+    #   'busyExecutors' => {},
+    #   'queueLength' => {},
+    #   'totalExecutors' => {},
+    #   'totalQueueLength' => {}
+    # }
+    # {
+    #   'description' => undef,
+    #   'jobs' => [
+    #     {
+    #       'color' => 'blue',
+    #       'name' => 'Test',
+    #       'url' => 'http://jenkins-t2:8080/job/Test/'
+    #     }
+    #   ],
+    #   'name' => 'Test',
+    #   'property' => [],
+    #   'url' => 'http://jenkins-t2:8080/view/Test/'
+    # }
+
+This method allows the same sort of refinement as the L<current_status> method.
+To just get the job info from the view for example you can do essentially the same,
+
+    use Data::Dumper;
+    my $view_list = $api->current_status({ extra_params => { tree => 'views[name]' }});
+    my @views = grep { $_ ne 'All' } map { $_->{name} } @{$view_list->{views}};
+    for my $view (@views)
+    {
+        my $view_jobs = $jenkins->view_status('Test', { extra_params => { tree => 'jobs[name,color]' }});
+        print Dumper($view_jobs);
+    }
+    # {
+    #   'jobs' => [
+    #     {
+    #       'color' => 'blue',
+    #       'name' => 'Test'
+    #     }
+    #   ]
+    # }
+
+
 =head2 trigger_build
 
 Trigger a build,
@@ -360,6 +407,13 @@ sub current_status
 {
     my $self = shift;
     return $self->_json_api(['api','json'], @_);
+}
+
+sub view_status
+{
+    my $self = shift;
+    my $view = shift;
+    return $self->_json_api(['view', $view, 'api', 'json'], @_);
 }
 
 sub _json_api

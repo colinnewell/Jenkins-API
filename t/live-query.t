@@ -52,4 +52,15 @@ explain $api->project_config('Test-Project');
 note 'Load statistics';
 explain $statistics;
 
+my $view = $api->view_status('Test');
+explain $view;
+my $view_list = $api->current_status({ extra_params => { tree => 'views[name]' }});
+explain $view_list;
+my @views = grep { $_ ne 'All' } map { $_->{name} } @{$view_list->{views}};
+for my $view (@views)
+{
+    my $view_jobs = $api->view_status('Test', { extra_params => { tree => 'jobs[name,color]' }});
+    explain $view_jobs;
+}
+
 done_testing;
