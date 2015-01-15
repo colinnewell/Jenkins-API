@@ -215,7 +215,7 @@ To just get the job info from the view for example you can do essentially the sa
     my @views = grep { $_ ne 'All' } map { $_->{name} } @{$view_list->{views}};
     for my $view (@views)
     {
-        my $view_jobs = $jenkins->view_status('Test', { extra_params => { tree => 'jobs[name,color]' }});
+        my $view_jobs = $jenkins->view_status($view, { extra_params => { tree => 'jobs[name,color]' }});
         print Dumper($view_jobs);
     }
     # {
