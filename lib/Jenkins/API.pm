@@ -13,11 +13,11 @@ Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
@@ -44,7 +44,11 @@ This is a wrapper around the Jenkins API.
 
     use Jenkins::API;
 
-    my $jenkins = Jenkins::API->new({ base_url => 'http://jenkins:8080' });
+    my $jenkins = Jenkins::API->new({
+        base_url => 'http://jenkins:8080',
+        api_key => 'username',
+        api_pass => 'apitoken',
+    });
     my $status = $jenkins->current_status();
     my @not_succeeded = grep { $_->{color} ne 'blue' } @{$status->{jobs}};
     # {
@@ -106,12 +110,6 @@ It returns the version number of the Jenkins server if it is running.
     $jenkins->check_jenkins_url;
     # 1.460
     
-=head2 get_job_details
-
-Returns detail about the job specified.
-
-   $job_details = $jenkins->get_job_details('Test-Project');
-
 =head2 current_status
 
 Returns the current status of the server as returned by the API.  This 
@@ -186,6 +184,43 @@ data for that job alone.
 The method will die saying 'Invalid response' if the server doesn't
 respond as it expects, or die with a JSON decoding error if the JSON
 parsing fails.
+
+=head2 get_job_details
+
+Returns detail about the job specified.
+
+    $job_details = $jenkins->get_job_details('Test-Project');
+    # {
+    #   'actions' => [],
+    #   'buildable' => bless( do{\(my $o = 0)}, 'JSON::PP::Boolean' ),
+    #   'builds' => [],
+    #   'color' => 'disabled',
+    #   'concurrentBuild' => $VAR1->{'buildable'},
+    #   'description' => '',
+    #   'displayName' => 'Test-Project',
+    #   'displayNameOrNull' => undef,
+    #   'downstreamProjects' => [],
+    #   'firstBuild' => undef,
+    #   'healthReport' => [],
+    #   'inQueue' => $VAR1->{'buildable'},
+    #   'keepDependencies' => $VAR1->{'buildable'},
+    #   'lastBuild' => undef,
+    #   'lastCompletedBuild' => undef,
+    #   'lastFailedBuild' => undef,
+    #   'lastStableBuild' => undef,
+    #   'lastSuccessfulBuild' => undef,
+    #   'lastUnstableBuild' => undef,
+    #   'lastUnsuccessfulBuild' => undef,
+    #   'name' => 'Test-Project',
+    #   'nextBuildNumber' => 1,
+    #   'property' => [],
+    #   'queueItem' => undef,
+    #   'scm' => {},
+    #   'upstreamProjects' => [],
+    #   'url' => 'http://jenkins-t2:8080/job/Test-Project/'
+    # }
+
+The information can be refined in the same way as L</current_status> using C<extra_params>. 
 
 =head2 view_status
 
@@ -400,33 +435,35 @@ sub check_jenkins_url
 sub build_queue
 {
     my $self = shift;
-    return $self->_json_api(['queue', 'api','json'], @_);
+    return $self->_json_api(['queue'], @_);
 }
 
 sub load_statistics
 {
     my $self = shift;
-    return $self->_json_api(['overallLoad', 'api','json'], @_);
+    return $self->_json_api(['overallLoad'], @_);
 }
 
 sub get_job_details
 {
     my $self = shift;
     my $job_name = shift;
-    return $self->_json_api(['job', $job_name, 'api', 'json'], @_);
+    my $build_id = shift;
+    return $self->_json_api(['job', $job_name, $build_id], @_) if($build_id);
+    return $self->_json_api(['job', $job_name], @_);
 }
 
 sub current_status
 {
     my $self = shift;
-    return $self->_json_api(['api','json'], @_);
+    return $self->_json_api([], @_);
 }
 
 sub view_status
 {
     my $self = shift;
     my $view = shift;
-    return $self->_json_api(['view', $view, 'api', 'json'], @_);
+    return $self->_json_api(['view', $view], @_);
 }
 
 sub _json_api
@@ -435,18 +472,20 @@ sub _json_api
     my $uri_parts = shift;
     my $args = shift;
     my $extra_params = $args->{extra_params};
-    my $bits = $args->{path_parts} || [];
+    my $path_parts = $args->{path_parts} || [];
+    my $api_type = $args->{api_type} || ['api', 'json'];
+    my $path_ends = $args->{path_ends} || [];
 
     my $uri = URI->new($self->base_url);
-    $uri->path_segments(@$bits, @$uri_parts);
+    $uri->path_segments(@$path_parts, @$uri_parts,@$path_ends,@$api_type);
     $uri->query_form($extra_params) if $extra_params;
 
     $self->_client->GET($uri->path_query);
-    die 'Invalid response' unless $self->_client->responseCode eq '200';
+    die 'Invalid response:'.$uri->path_query unless $self->_client->responseCode eq '200';
     # NOTE: my server returns UTF8, if this turns out to be a broken
     # assumption read the Content-Type header.
-    my $data = JSON->new->utf8->decode($self->_client->responseContent());
-    return $data;
+    return JSON->new->utf8->decode($self->_client->responseContent()) if(@$api_type && @$api_type[0] eq 'api' && @$api_type[1] eq 'json');
+    return $self->_client->responseContent();
 }
 
 =head2 response_code
@@ -476,11 +515,6 @@ sub response_content
     return $self->_client->responseContent;
 }
 
-
-=head1 AUTHOR
-
-Colin Newell, C<< <colin.newell at gmail.com> >>
-Dave Horner C<< <dave at thehorners.com> >>
 
 =head1 BUGS
 
@@ -583,7 +617,9 @@ Piers Cawley
 Arthur Axel 'fREW' Schmidt
 
 =item *
+
 Dave Horner L<https://dave.thehorners.com>
+
 =back
 
 =head1 LICENSE AND COPYRIGHT
