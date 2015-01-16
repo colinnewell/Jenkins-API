@@ -1,5 +1,9 @@
 Revision history for Jenkins-API
 
+0.10    2015-01-16
+        Added new get_job_details method.
+        [David Horner]
+
 0.09    2015-01-15
         Added new view_status method.
         Improved documentation of authentication

@@ -106,12 +106,6 @@ It returns the version number of the Jenkins server if it is running.
     $jenkins->check_jenkins_url;
     # 1.460
     
-=head2 get_job_details
-
-Returns detail about the job specified.
-
-   $job_details = $jenkins->get_job_details('Test-Project');
-
 =head2 current_status
 
 Returns the current status of the server as returned by the API.  This 
@@ -186,6 +180,43 @@ data for that job alone.
 The method will die saying 'Invalid response' if the server doesn't
 respond as it expects, or die with a JSON decoding error if the JSON
 parsing fails.
+
+=head2 get_job_details
+
+Returns detail about the job specified.
+
+    $job_details = $jenkins->get_job_details('Test-Project');
+    # {
+    #   'actions' => [],
+    #   'buildable' => bless( do{\(my $o = 0)}, 'JSON::PP::Boolean' ),
+    #   'builds' => [],
+    #   'color' => 'disabled',
+    #   'concurrentBuild' => $VAR1->{'buildable'},
+    #   'description' => '',
+    #   'displayName' => 'Test-Project',
+    #   'displayNameOrNull' => undef,
+    #   'downstreamProjects' => [],
+    #   'firstBuild' => undef,
+    #   'healthReport' => [],
+    #   'inQueue' => $VAR1->{'buildable'},
+    #   'keepDependencies' => $VAR1->{'buildable'},
+    #   'lastBuild' => undef,
+    #   'lastCompletedBuild' => undef,
+    #   'lastFailedBuild' => undef,
+    #   'lastStableBuild' => undef,
+    #   'lastSuccessfulBuild' => undef,
+    #   'lastUnstableBuild' => undef,
+    #   'lastUnsuccessfulBuild' => undef,
+    #   'name' => 'Test-Project',
+    #   'nextBuildNumber' => 1,
+    #   'property' => [],
+    #   'queueItem' => undef,
+    #   'scm' => {},
+    #   'upstreamProjects' => [],
+    #   'url' => 'http://jenkins-t2:8080/job/Test-Project/'
+    # }
+
+The information can be refined in the same way as L</current_status> using C<extra_params>. 
 
 =head2 view_status
 
@@ -578,7 +609,9 @@ Piers Cawley
 Arthur Axel 'fREW' Schmidt
 
 =item *
+
 Dave Horner L<https://dave.thehorners.com>
+
 =back
 
 =head1 LICENSE AND COPYRIGHT

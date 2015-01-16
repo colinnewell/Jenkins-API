@@ -49,8 +49,16 @@ is $api->response_code, '200';
 ok $api->response_content;
 explain $api->project_config('Test-Project');
 
+my $job_info = $api->get_job_details('Test-Project');
+note 'get_job_details';
+explain $job_info;
+
+my $job_info2 = $api->get_job_details('Test-Project', { extra_params => { tree => 'healthReport' } });
+explain $job_info2view_status;
+
 note 'Load statistics';
 explain $statistics;
+
 
 my $view = $api->view_status('Test');
 explain $view;
@@ -59,7 +67,7 @@ explain $view_list;
 my @views = grep { $_ ne 'All' } map { $_->{name} } @{$view_list->{views}};
 for my $view (@views)
 {
-    my $view_jobs = $api->view_status('Test', { extra_params => { tree => 'jobs[name,color]' }});
+    my $view_jobs = $api->view_status($view, { extra_params => { tree => 'jobs[name,color]' }});
     explain $view_jobs;
 }
 
