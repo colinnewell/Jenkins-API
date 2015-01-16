@@ -477,11 +477,6 @@ sub response_content
 }
 
 
-=head1 AUTHOR
-
-Colin Newell, C<< <colin.newell at gmail.com> >>
-Dave Horner C<< <dave at thehorners.com> >>
-
 =head1 BUGS
 
 The API wrapper doesn't deal with jenkins installations not running from
