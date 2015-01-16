@@ -13,11 +13,11 @@ Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
-Version 0.09
+Version 0.10
 
 =cut
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
@@ -105,6 +105,12 @@ It returns the version number of the Jenkins server if it is running.
 
     $jenkins->check_jenkins_url;
     # 1.460
+    
+=head2 get_job_details
+
+Returns detail about the job specified.
+
+   $job_details = $jenkins->get_job_details('Test-Project');
 
 =head2 current_status
 
@@ -403,6 +409,13 @@ sub load_statistics
     return $self->_json_api(['overallLoad', 'api','json'], @_);
 }
 
+sub get_job_details
+{
+    my $self = shift;
+    my $job_name = shift;
+    return $self->_json_api(['job', $job_name, 'api', 'json'], @_);
+}
+
 sub current_status
 {
     my $self = shift;
@@ -467,6 +480,7 @@ sub response_content
 =head1 AUTHOR
 
 Colin Newell, C<< <colin.newell at gmail.com> >>
+Dave Horner C<< <dave at thehorners.com> >>
 
 =head1 BUGS
 
@@ -568,6 +582,8 @@ Piers Cawley
 
 Arthur Axel 'fREW' Schmidt
 
+=item *
+Dave Horner L<https://dave.thehorners.com>
 =back
 
 =head1 LICENSE AND COPYRIGHT
