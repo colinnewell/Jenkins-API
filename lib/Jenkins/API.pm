@@ -44,7 +44,11 @@ This is a wrapper around the Jenkins API.
 
     use Jenkins::API;
 
-    my $jenkins = Jenkins::API->new({ base_url => 'http://jenkins:8080' });
+    my $jenkins = Jenkins::API->new({
+        base_url => 'http://jenkins:8080',
+        api_key => 'username',
+        api_pass => 'apitoken',
+    });
     my $status = $jenkins->current_status();
     my @not_succeeded = grep { $_->{color} ne 'blue' } @{$status->{jobs}};
     # {
