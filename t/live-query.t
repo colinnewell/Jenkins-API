@@ -54,7 +54,7 @@ note 'get_job_details';
 explain $job_info;
 
 my $job_info2 = $api->get_job_details('Test-Project', { extra_params => { tree => 'healthReport' } });
-explain $job_info2view_status;
+explain $job_info2;
 
 note 'Load statistics';
 explain $statistics;
@@ -70,5 +70,16 @@ for my $view (@views)
     my $view_jobs = $api->view_status($view, { extra_params => { tree => 'jobs[name,color]' }});
     explain $view_jobs;
 }
+
+my $response = $api->general_call(
+    ['job', 'Test', 'api', 'json'], 
+    {
+        method => 'GET',
+        extra_params => { tree => 'color,description' },
+        decode_json => 1,
+        expected_response_code => 200,
+    });
+note 'General call';
+explain $response;
 
 done_testing;

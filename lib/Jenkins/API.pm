@@ -349,6 +349,50 @@ Delete the project from Jenkins.
 
     my $success = $api->delete_project($project_name);
 
+=head2 general_call
+
+This is a catch all method for making a call to the API.  Jenkins is 
+extensible with plugins which can add new API end points.  We can not
+predict all of these so this method allows you to call those functions
+without needing a specific method.
+
+general_call($url_parts, $args);
+
+    my $response = $api->general_call(
+        ['job', $job, 'api', 'json'], 
+        {
+            method => 'GET',
+            extra_params => { tree => 'color,description' },
+            decode_json => 1,
+            expected_response_code => 200,
+        });
+
+    # does a GET /job/$job/api/json?tree=color%2Cdescription
+    # decodes the response as json
+    # dies if a 200 response isn't returned.
+
+The arguments hash can contain these elements,
+
+=over
+
+=item * method
+
+Valid options are the HTTP verbs, make sure they are in caps.
+
+=item * extra_params
+
+Pass in extra parameters the method expects.
+
+=item * decode_json
+
+Defaulted to true.
+
+=item * expected_response_code
+
+Defaulted to 200
+
+=back
+
 =cut
 
 sub create_job
@@ -482,6 +526,31 @@ sub _json_api
     # assumption read the Content-Type header.
     my $data = JSON->new->utf8->decode($self->_client->responseContent());
     return $data;
+}
+
+sub general_call
+{
+    my $self = shift;
+    my $uri_parts = shift;
+    my $args = shift;
+
+    my $extra_params = $args->{extra_params};
+    my $method = $args->{method} || 'GET';
+    my $decode_json = exists $args->{decode_json} ? $args->{decode_json} : 1;
+    my $expected_response = $args->{expected_response_code} || 200;
+
+    my $uri = URI->new($self->base_url);
+    $uri->path_segments(@$uri_parts);
+    $uri->query_form($extra_params) if $extra_params;
+
+    $self->_client->$method($uri->path_query);
+    die 'Invalid response' unless $self->_client->responseCode eq $expected_response;
+    my $response = $self->_client->responseContent();
+    if($decode_json)
+    {
+        $response = JSON->new->utf8->decode($response);
+    }
+    return $response;
 }
 
 =head2 response_code
