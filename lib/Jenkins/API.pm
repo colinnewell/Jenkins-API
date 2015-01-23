@@ -13,11 +13,11 @@ Jenkins::API - A wrapper around the Jenkins API
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
