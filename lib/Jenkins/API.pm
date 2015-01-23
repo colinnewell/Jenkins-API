@@ -479,33 +479,35 @@ sub check_jenkins_url
 sub build_queue
 {
     my $self = shift;
-    return $self->_json_api(['queue', 'api','json'], @_);
+    return $self->_json_api(['queue'], @_);
 }
 
 sub load_statistics
 {
     my $self = shift;
-    return $self->_json_api(['overallLoad', 'api','json'], @_);
+    return $self->_json_api(['overallLoad'], @_);
 }
 
 sub get_job_details
 {
     my $self = shift;
     my $job_name = shift;
-    return $self->_json_api(['job', $job_name, 'api', 'json'], @_);
+    my $build_id = shift;
+    return $self->_json_api(['job', $job_name, $build_id], @_) if($build_id);
+    return $self->_json_api(['job', $job_name], @_);
 }
 
 sub current_status
 {
     my $self = shift;
-    return $self->_json_api(['api','json'], @_);
+    return $self->_json_api([], @_);
 }
 
 sub view_status
 {
     my $self = shift;
     my $view = shift;
-    return $self->_json_api(['view', $view, 'api', 'json'], @_);
+    return $self->_json_api(['view', $view], @_);
 }
 
 sub _json_api
@@ -514,18 +516,20 @@ sub _json_api
     my $uri_parts = shift;
     my $args = shift;
     my $extra_params = $args->{extra_params};
-    my $bits = $args->{path_parts} || [];
+    my $path_parts = $args->{path_parts} || [];
+    my $api_type = $args->{api_type} || ['api', 'json'];
+    my $path_ends = $args->{path_ends} || [];
 
     my $uri = URI->new($self->base_url);
-    $uri->path_segments(@$bits, @$uri_parts);
+    $uri->path_segments(@$path_parts, @$uri_parts,@$path_ends,@$api_type);
     $uri->query_form($extra_params) if $extra_params;
 
     $self->_client->GET($uri->path_query);
-    die 'Invalid response' unless $self->_client->responseCode eq '200';
+    die 'Invalid response:'.$uri->path_query unless $self->_client->responseCode eq '200';
     # NOTE: my server returns UTF8, if this turns out to be a broken
     # assumption read the Content-Type header.
-    my $data = JSON->new->utf8->decode($self->_client->responseContent());
-    return $data;
+    return JSON->new->utf8->decode($self->_client->responseContent()) if(@$api_type && @$api_type[0] eq 'api' && @$api_type[1] eq 'json');
+    return $self->_client->responseContent();
 }
 
 sub general_call
