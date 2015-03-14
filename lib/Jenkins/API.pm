@@ -440,7 +440,7 @@ sub _trigger_build
     $uri->path_segments('job', $job, $build_url);
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->POST($uri->path_query);
-    return $self->_client->responseCode eq '302';
+    return $self->_client->responseCode eq '201';
 }
 
 sub project_config
