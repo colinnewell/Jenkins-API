@@ -18,7 +18,7 @@ build_requires 'Test::Most';
 resources(
         'license'    => 'http://dev.perl.org/licenses/',
         'homepage'   => 'https://github.com/colinnewell/Jenkins-API',
-        'repository' => 'https://github.com/colinnewell/Jenkins-API',
+        'repository' => 'https://github.com/colinnewell/Jenkins-API.git',
         'bugtracker'  => 'https://github.com/colinnewell/Jenkins-API/issues',
 );
 
