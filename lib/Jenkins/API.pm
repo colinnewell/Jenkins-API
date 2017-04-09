@@ -7,17 +7,9 @@ use MIME::Base64;
 use URI;
 use REST::Client;
 
-=head1 NAME
+# ABSTRACT: A wrapper around the Jenkins API
 
-Jenkins::API - A wrapper around the Jenkins API
-
-=head1 VERSION
-
-Version 0.11
-
-=cut
-
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
@@ -653,10 +645,6 @@ With thanks to Nick Hu for adding the trigger_build_with_parameters method.
 
 Alex Kulbiy for the auth support and David Steinbrunner for some Makefile love.
 
-=head1 AUTHOR
-
-Colin Newell <colin.newell@gmail.com>
-
 =head1 CONTRIBUTORS
 
 =over 4
@@ -686,17 +674,6 @@ Arthur Axel 'fREW' Schmidt
 Dave Horner L<https://dave.thehorners.com>
 
 =back
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2012-2015 Colin Newell.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
 
 =cut
 

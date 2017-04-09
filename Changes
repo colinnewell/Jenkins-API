@@ -1,5 +1,9 @@
 Revision history for Jenkins-API
 
+{{ $NEXT }}
+
+        Converted to Dzil to fix issue #18.
+
 0.11    2015-01-23
         Added new method 'general_call' for arbitrary api calls.
 
