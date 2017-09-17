@@ -7,7 +7,8 @@ requires 'Types::Standard';
 requires 'URI';
 
 on 'build' => sub {
-    requires 'Test::Most';
+    requires 'Test2::V0';
+    requires 'Test2::Tools::Explain';
 };
 
 
