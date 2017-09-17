@@ -562,7 +562,7 @@ sub response_code
 
 This method returns the content of the HTTP response from our 
 last request to the Jenkins server.  This may be useful when 
-an error occurrs.
+an error occurs.
 
 =cut
 
