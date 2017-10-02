@@ -2,6 +2,11 @@ Revision history for Jenkins-API
 
 {{ $NEXT }}
 
+        Switched to Test2 explicitly.
+        Updated build process to make better use of Dzil.
+        Wired in Travis and coveralls.
+        Increased test coverage.
+
 0.12      2017-04-09 20:04:10+01:00 Europe/London
 
         Converted to Dzil to fix issue #18.
