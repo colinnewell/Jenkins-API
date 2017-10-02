@@ -9,7 +9,7 @@ use REST::Client;
 
 # ABSTRACT: A wrapper around the Jenkins API
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
