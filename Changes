@@ -2,6 +2,10 @@ Revision history for Jenkins-API
 
 {{ $NEXT }}
 
+0.14      2017-10-02 18:48:24+01:00 Europe/London
+
+          Making the release process more automatic.
+
 0.13      2017-10-02 18:37:04+01:00 Europe/London
 
         Switched to Test2 explicitly.
