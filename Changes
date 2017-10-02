@@ -2,6 +2,10 @@ Revision history for Jenkins-API
 
 {{ $NEXT }}
 
+0.15      2017-10-02 18:56:42+01:00 Europe/London
+
+          Made git commit steps in build process more logical.
+
 0.14      2017-10-02 18:48:24+01:00 Europe/London
 
           Making the release process more automatic.
