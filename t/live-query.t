@@ -722,7 +722,6 @@ sub setup_fake_responses {
                 my $self = shift;
                 my $req  = shift @$fake_responses;
                 my $res  = $req->{res};
-                $DB::single = 1;
 
                 # FIXME: check request looks sane
                 $self->{_res} = HTTP::Response->new(
