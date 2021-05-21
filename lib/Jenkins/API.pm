@@ -24,7 +24,7 @@ has '_client' => (
         my $client = REST::Client->new();
         $client->setHost($self->base_url);
         if (defined($self->api_key) and defined($self->api_pass)) {
-            $client->addHeader("Authorization", "Basic " .
+            $client->addHeader('Authorization', 'Basic ' .
                                encode_base64($self->api_key . ':' . $self->api_pass));
         }
         return $client;
@@ -451,7 +451,7 @@ sub project_config
     $uri->path_segments('job', $job, 'config.xml');
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->path_query);
-    return $self->_client->responseContent;
+    return $self->response_content;
 }
 
 sub set_project_config
@@ -522,7 +522,7 @@ sub _json_api
     die 'Invalid response' unless $self->response_code == HTTP_OK;
     # NOTE: my server returns UTF8, if this turns out to be a broken
     # assumption read the Content-Type header.
-    my $data = JSON->new->utf8->decode($self->_client->responseContent());
+    my $data = JSON->new->utf8->decode($self->response_content());
     return $data;
 }
 
@@ -543,7 +543,7 @@ sub general_call
 
     $self->_client->$method($uri->path_query);
     die 'Invalid response' unless $self->response_code == $expected_response;
-    my $response = $self->_client->responseContent();
+    my $response = $self->response_content();
     if($decode_json)
     {
         $response = JSON->new->utf8->decode($response);
@@ -568,8 +568,32 @@ an error occurs.
 
 =head2 response_header
 
-This method returns the specified header of the HTTP response from our
-last request to the Jenkins server.
+This method returns the specified header of the HTTP response from
+our last request to the Jenkins server.  The following example
+triggers a parameterized build, extracts the 'Location' HTTP response
+header, and selects certain elements of the queue item information
+
+    $success = $jenkins->trigger_build_with_parameters('Test-Project', { Parameter => 'Value' } );
+    if ($success) {
+      my $location = $jenkins->response_header('Location');
+      my $queue_item = $jenkins->general_call(
+        [ URI->new($location)->path_segments, 'api', 'json' ],
+        {
+          extra_params => { tree => 'url,why,executable[url]' }
+        }
+      );
+      # {
+      #   'executable' => {
+      #      'url' => 'http://jenkins:8080/job/Test-Project/136/',
+      #      '_class' => 'org.jenkinsci.plugins.workflow.job.WorkflowRun'
+      #   },
+      #   'url' => 'queue/item/555125/',
+      #   'why' => undef,
+      #   '_class' => 'hudson.model.Queue$LeftItem'
+      # };
+    } else {
+      print $jenkins->response_code;
+    }
 
 =cut
 
