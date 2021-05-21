@@ -28,6 +28,11 @@ has '_client' => (
                                encode_base64($self->api_key . ':' . $self->api_pass));
         }
         return $client;
+    },
+    handles => {
+      response_code    => 'responseCode',
+      response_content => 'responseContent',
+      response_header  => 'responseHeader'
     }
 );
 
@@ -553,12 +558,6 @@ the Jenkins server.  This may be useful when an error occurred.
 
 =cut
 
-sub response_code
-{
-    my $self = shift;
-    return $self->_client->responseCode;
-}
-
 =head2 response_content
 
 This method returns the content of the HTTP response from our
@@ -567,25 +566,12 @@ an error occurs.
 
 =cut
 
-sub response_content
-{
-    my $self = shift;
-    return $self->_client->responseContent;
-}
-
 =head2 response_header
 
 This method returns the specified header of the HTTP response from our
 last request to the Jenkins server.
 
 =cut
-
-sub response_header
-{
-    my $self = shift;
-    my $header = shift;
-    return $self->_client->responseHeader($header);
-}
 
 =head1 BUGS
 
