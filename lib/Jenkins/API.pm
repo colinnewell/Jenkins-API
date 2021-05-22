@@ -569,9 +569,11 @@ an error occurs.
 =head2 response_header
 
 This method returns the specified header of the HTTP response from
-our last request to the Jenkins server.  The following example
-triggers a parameterized build, extracts the 'Location' HTTP response
-header, and selects certain elements of the queue item information
+our last request to the Jenkins server.
+
+The following example triggers a parameterized build, extracts the 'Location'
+HTTP response header, and selects certain elements of the queue item
+information
 
     $success = $jenkins->trigger_build_with_parameters('Test-Project', { Parameter => 'Value' } );
     if ($success) {
@@ -696,6 +698,10 @@ Arthur Axel 'fREW' Schmidt
 =item *
 
 Dave Horner L<https://dave.thehorners.com>
+
+=item *
+
+Sven Willenbuecher
 
 =back
 
