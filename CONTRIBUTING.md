@@ -10,7 +10,7 @@ These things I consider to be important:
 
 Technical details.  This module uses Dist::Zilla to release to CPAN.  This can
 throw people off as there is no Makefile.PL in the git repo.  Developement is
-possible without installing dist::zilla.  It is only requiredd for release to
+possible without installing Dist::Zilla.  It is only required for release to
 CPAN.
 
 To install dependencies:
