@@ -10,7 +10,7 @@ use HTTP::Status qw(HTTP_CREATED HTTP_FOUND HTTP_OK);
 
 # ABSTRACT: A wrapper around the Jenkins API
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 
 has base_url => (is => 'ro', isa => Str, required => 1);
 has api_key => (is => 'ro', isa => Maybe[Str], required => 0);
