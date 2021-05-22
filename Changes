@@ -2,8 +2,6 @@ Revision history for Jenkins-API
 
 {{ $NEXT }}
 
-0.18    2021-05-21
-
         Remove leftover trailing spaces
         Fix indentation at some places
         Use HTTP status code constants and numeric comparison
