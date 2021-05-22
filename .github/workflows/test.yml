@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        perl:
+          - '5.10'
+          - '5.24'
+          - '5.30'
+          - '5.32'
+
+    runs-on: ubuntu-latest
+
+    name: ${{ matrix.perl }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+
+      - run: perl -v
+
+      - run: cpanm --installdeps -n .
+
+      - run: prove -lv
