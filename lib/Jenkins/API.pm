@@ -6,6 +6,7 @@ use JSON;
 use MIME::Base64;
 use URI;
 use REST::Client;
+use HTTP::Status qw(HTTP_CREATED HTTP_FOUND HTTP_OK);
 
 # ABSTRACT: A wrapper around the Jenkins API
 
@@ -23,16 +24,21 @@ has '_client' => (
         my $client = REST::Client->new();
         $client->setHost($self->base_url);
         if (defined($self->api_key) and defined($self->api_pass)) {
-            $client->addHeader("Authorization", "Basic " .
-                               encode_base64($self->api_key . ':' . $self->api_pass)); 
+            $client->addHeader('Authorization', 'Basic ' .
+                               encode_base64($self->api_key . ':' . $self->api_pass));
         }
         return $client;
+    },
+    handles => {
+      response_code    => 'responseCode',
+      response_content => 'responseContent',
+      response_header  => 'responseHeader'
     }
 );
 
 =head1 SYNOPSIS
 
-This is a wrapper around the Jenkins API.  
+This is a wrapper around the Jenkins API.
 
     use Jenkins::API;
 
@@ -101,10 +107,10 @@ It returns the version number of the Jenkins server if it is running.
 
     $jenkins->check_jenkins_url;
     # 1.460
-    
+
 =head2 current_status
 
-Returns the current status of the server as returned by the API.  This 
+Returns the current status of the server as returned by the API.  This
 is a hash containing a fairly comprehensive list of what's going on.
 
     $jenkins->current_status();
@@ -140,7 +146,7 @@ is a hash containing a fairly comprehensive list of what's going on.
     #   ]
     # }
 
-It is also possible to pass two parameters to the query to refine or 
+It is also possible to pass two parameters to the query to refine or
 expand the data you get back.  The tree parameter allows you to select
 specific elements. The example from the Jenkins documentation , C<< tree=> 'jobs[name],views[name,jobs[name]]' >> demonstrates the syntax nicely.
 
@@ -161,12 +167,12 @@ it higher it dumps a ton of data.
     # returns everything and the kitchen sink.
 
 It is also possible to only look at a subset of the data.  Most urls
-you can see on the website in Jenkins can be accessed.  If you have a 
+you can see on the website in Jenkins can be accessed.  If you have a
 job named Test-Project for example with the url C</job/Test-Project> you
 can specify the C<< path_parts => ['job', 'Test-Project'] >> to look at the
 data for that job alone.
 
-    $jenkins->current_status({ 
+    $jenkins->current_status({
         path_parts => [qw/job Test-Project/],
         extra_params => { depth => 1 },
     });
@@ -212,11 +218,11 @@ Returns detail about the job specified.
     #   'url' => 'http://jenkins-t2:8080/job/Test-Project/'
     # }
 
-The information can be refined in the same way as L</current_status> using C<extra_params>. 
+The information can be refined in the same way as L</current_status> using C<extra_params>.
 
 =head2 view_status
 
-Provides the status of the specified view.  The list of views is 
+Provides the status of the specified view.  The list of views is
 provided in the general status report.
 
     $jenkins->view_status('MyView');
@@ -343,7 +349,7 @@ Delete the project from Jenkins.
 
 =head2 general_call
 
-This is a catch all method for making a call to the API.  Jenkins is 
+This is a catch all method for making a call to the API.  Jenkins is
 extensible with plugins which can add new API end points.  We can not
 predict all of these so this method allows you to call those functions
 without needing a specific method.
@@ -351,7 +357,7 @@ without needing a specific method.
 general_call($url_parts, $args);
 
     my $response = $api->general_call(
-        ['job', $job, 'api', 'json'], 
+        ['job', $job, 'api', 'json'],
         {
             method => 'GET',
             extra_params => { tree => 'color,description' },
@@ -396,7 +402,7 @@ sub create_job
     $uri->query_form( name => $name );
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
     $self->_client->POST($uri->path_query, $job_config, { 'Content-Type' => 'text/xml' });
-    return $self->_client->responseCode() eq '200';
+    return $self->response_code == HTTP_OK;
 }
 
 sub delete_project
@@ -406,19 +412,19 @@ sub delete_project
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $name, 'doDelete');
     $self->_client->POST($uri->path_query, undef, { 'Content-Type' => 'text/xml' });
-    return $self->_client->responseCode() eq '302';
+    return $self->response_code == HTTP_FOUND;
 }
 
 sub trigger_build
 {
-  my $self = shift;
-  return $self->_trigger_build('build', @_);
+    my $self = shift;
+    return $self->_trigger_build('build', @_);
 }
 
 sub trigger_build_with_parameters
 {
-  my $self = shift;
-  return $self->_trigger_build('buildWithParameters', @_);
+    my $self = shift;
+    return $self->_trigger_build('buildWithParameters', @_);
 }
 
 sub _trigger_build
@@ -432,7 +438,7 @@ sub _trigger_build
     $uri->path_segments('job', $job, $build_url);
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->POST($uri->path_query);
-    return $self->_client->responseCode eq '201';
+    return $self->response_code == HTTP_CREATED;
 }
 
 sub project_config
@@ -445,7 +451,7 @@ sub project_config
     $uri->path_segments('job', $job, 'config.xml');
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->path_query);
-    return $self->_client->responseContent;
+    return $self->response_content;
 }
 
 sub set_project_config
@@ -457,15 +463,15 @@ sub set_project_config
     my $uri = URI->new($self->base_url);
     $uri->path_segments('job', $job, 'config.xml');
     $self->_client->POST($uri->path_query, $config, { 'Content-Type' => 'text/xml' });
-    return $self->_client->responseCode() eq '200';
+    return $self->response_code == HTTP_OK;
 }
 
 sub check_jenkins_url
 {
     my $self = shift;
     $self->_client->GET('/');
-    return $self->_client->responseCode() eq '200'
-        && $self->_client->responseHeader('X-Jenkins');
+    return $self->response_code == HTTP_OK
+        && $self->response_header('X-Jenkins');
 }
 
 sub build_queue
@@ -513,10 +519,10 @@ sub _json_api
     $uri->query_form($extra_params) if $extra_params;
 
     $self->_client->GET($uri->path_query);
-    die 'Invalid response' unless $self->_client->responseCode eq '200';
+    die 'Invalid response' unless $self->response_code == HTTP_OK;
     # NOTE: my server returns UTF8, if this turns out to be a broken
     # assumption read the Content-Type header.
-    my $data = JSON->new->utf8->decode($self->_client->responseContent());
+    my $data = JSON->new->utf8->decode($self->response_content());
     return $data;
 }
 
@@ -529,15 +535,15 @@ sub general_call
     my $extra_params = $args->{extra_params};
     my $method = $args->{method} || 'GET';
     my $decode_json = exists $args->{decode_json} ? $args->{decode_json} : 1;
-    my $expected_response = $args->{expected_response_code} || 200;
+    my $expected_response = $args->{expected_response_code} || HTTP_OK;
 
     my $uri = URI->new($self->base_url);
     $uri->path_segments(@$uri_parts);
     $uri->query_form($extra_params) if $extra_params;
 
     $self->_client->$method($uri->path_query);
-    die 'Invalid response' unless $self->_client->responseCode eq $expected_response;
-    my $response = $self->_client->responseContent();
+    die 'Invalid response' unless $self->response_code == $expected_response;
+    my $response = $self->response_content();
     if($decode_json)
     {
         $response = JSON->new->utf8->decode($response);
@@ -547,31 +553,49 @@ sub general_call
 
 =head2 response_code
 
-This method returns the HTTP response code from our last request to 
+This method returns the HTTP response code from our last request to
 the Jenkins server.  This may be useful when an error occurred.
 
 =cut
 
-sub response_code
-{
-    my $self = shift;
-    return $self->_client->responseCode;
-}
-
 =head2 response_content
 
-This method returns the content of the HTTP response from our 
-last request to the Jenkins server.  This may be useful when 
+This method returns the content of the HTTP response from our
+last request to the Jenkins server.  This may be useful when
 an error occurs.
 
 =cut
 
-sub response_content
-{
-    my $self = shift;
-    return $self->_client->responseContent;
-}
+=head2 response_header
 
+This method returns the specified header of the HTTP response from
+our last request to the Jenkins server.  The following example
+triggers a parameterized build, extracts the 'Location' HTTP response
+header, and selects certain elements of the queue item information
+
+    $success = $jenkins->trigger_build_with_parameters('Test-Project', { Parameter => 'Value' } );
+    if ($success) {
+      my $location = $jenkins->response_header('Location');
+      my $queue_item = $jenkins->general_call(
+        [ URI->new($location)->path_segments, 'api', 'json' ],
+        {
+          extra_params => { tree => 'url,why,executable[url]' }
+        }
+      );
+      # {
+      #   'executable' => {
+      #      'url' => 'http://jenkins:8080/job/Test-Project/136/',
+      #      '_class' => 'org.jenkinsci.plugins.workflow.job.WorkflowRun'
+      #   },
+      #   'url' => 'queue/item/555125/',
+      #   'why' => undef,
+      #   '_class' => 'hudson.model.Queue$LeftItem'
+      # };
+    } else {
+      print $jenkins->response_code;
+    }
+
+=cut
 
 =head1 BUGS
 
@@ -580,9 +604,9 @@ the root path.  I don't actually know if that's an install option, but
 the internal url building just doesn't deal with that situation properly.
 If you want that fixing a patch is welcome.
 
-Please report any bugs or feature requests to through the web interface 
-at L<https://github.com/colinnewell/Jenkins-API/issues/new>.  I will 
-be notified, and then you'll automatically be notified of progress 
+Please report any bugs or feature requests to through the web interface
+at L<https://github.com/colinnewell/Jenkins-API/issues/new>.  I will
+be notified, and then you'll automatically be notified of progress
 on your bug as I make changes.
 
 
