@@ -4,7 +4,7 @@ to allow discussion.
 
 These things I consider to be important:
 
-* Backwards compatbility.  I don't want to break existing code using this
+* Backwards compatibility.  I don't want to break existing code using this
   module.
 * Documentation.
 
