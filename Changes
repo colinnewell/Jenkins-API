@@ -1,6 +1,7 @@
 Revision history for Jenkins-API
 
 {{ $NEXT }}
+        allow base_url with extra path segments
 
 0.18      2021-05-22 08:50:23+01:00 Europe/London
 

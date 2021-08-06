@@ -448,7 +448,7 @@ sub project_config
     my $extra_params = shift;
 
     my $uri = URI->new($self->base_url);
-    $uri->path_segments('job', $job, 'config.xml');
+    $uri->path_segments($uri->path_segments, 'job', $job, 'config.xml');
     $uri->query_form($extra_params) if $extra_params;
     $self->_client->GET($uri->path_query);
     return $self->response_content;
