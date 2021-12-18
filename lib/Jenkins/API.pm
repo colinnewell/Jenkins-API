@@ -395,10 +395,10 @@ Defaulted to 200
 
 sub create_job
 {
-    my ($self, $name, $job_config) = @_;
+    my ($self, $name, $view_name, $job_config) = @_; 
 
     my $uri = URI->new($self->base_url);
-    $uri->path_segments('createItem');
+    $uri->path_segments("view", $view_name, 'createItem'); 
     $uri->query_form( name => $name );
     # curl -XPOST http://moe:8080/createItem?name=test -d@config.xml -v -H Content-Type:text/xml
     $self->_client->POST($uri->path_query, $job_config, { 'Content-Type' => 'text/xml' });
